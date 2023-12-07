@@ -5,10 +5,8 @@ declare(strict_types=1);
 
 
 require_once './Page.php';
-include 'parts/nav.php';
 
-
-class index extends Page
+class edit extends Page
 {
     // to do: declare reference variables for members
     // representing substructures/blocks
@@ -48,7 +46,22 @@ class index extends Page
     {
         // to do: fetch data for this view from the database
         // to do: return array containing data
-        return array();
+        $sql = "SELECT * FROM examples where name = 'Blog'";
+
+        $recordset = $this->_database->query($sql);
+        if (!$recordset) {
+            throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+        }
+
+        $result = $recordset->fetch_assoc();
+//        $record = $recordset->fetch_assoc();
+//        while ($record) {
+//            $result[] = $record;
+//            $record = $recordset->fetch_assoc();
+//        }
+
+        $recordset->free();
+        return $result;
     }
 
     /**
@@ -62,11 +75,40 @@ class index extends Page
     protected function generateView(): void
     {
         $data = $this->getViewData(); //NOSONAR ignore unused $data
+
+
         $this->generatePageHeader('Own CMS New', 'js/main.js'); //to do: set optional parameters
-        echo <<< HTML
-    <h1>Willkommen</h1>
-    <p>Dies ist eine richtig gute Content Management System (CMS) Webseite</p>
-HTML;
+        $titel = htmlspecialchars($data['title']);
+        $navi = htmlspecialchars($data['navi']);
+        $content = htmlspecialchars($data['content']);
+
+        echo <<< TITEL
+        <a href="dashboard.php">Zurück zu Dashboard</a>
+
+        <form action="edit.php" method="post" accept-charset="utf-8">
+        <h3>Titel</h3>
+        <textarea rows="5" cols="120" name="titel">$titel</textarea>
+        <input type="submit" value="Editieren">
+        </form>
+TITEL;
+
+
+        echo <<< NAVI
+        <form action="edit.php" method="post" accept-charset="utf-8">
+        <h3>Navigation</h3>
+        <textarea rows="15" cols="120" name="navi">$navi</textarea>
+        <input type="submit" value="Editieren">
+        </form>
+NAVI;
+
+        echo <<< MAIN
+        <form action="edit.php" method="post" accept-charset="utf-8">
+        <h3>Content</h3>
+        <textarea rows="20" cols="120" name="content">$content</textarea>
+        <input type="submit" value="Editieren">
+        </form>
+MAIN;
+
         $this->generatePageFooter();
     }
 
@@ -79,6 +121,43 @@ HTML;
     protected function processReceivedData(): void
     {
         parent::processReceivedData();
+
+        if(isset($_POST['titel'])){
+            $saveTitel = $this->_database->real_escape_string($_POST['titel']);
+            $sqlUpdateOrdArt = "UPDATE examples SET title = '$saveTitel'";
+
+            $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
+
+            if (!$sqlUpdateCheck) {
+                throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+            }
+            echo "Titel editiert";
+        }
+
+        if(isset($_POST['navi'])){
+            $saveNavi = $this->_database->real_escape_string($_POST['navi']);
+            $sqlUpdateOrdArt = "UPDATE examples SET navi = '$saveNavi'";
+
+            $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
+
+            if (!$sqlUpdateCheck) {
+                throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+            }
+            echo "Navi editiert";
+        }
+
+        if(isset($_POST['content'])){
+           $saveContent = $this->_database->real_escape_string($_POST['content']);
+            $sqlUpdateOrdArt = "UPDATE examples SET content = '$saveContent'";
+
+            $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
+
+            if (!$sqlUpdateCheck) {
+                throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+            }
+            echo "Content editiert";
+        }
+
 
         // to do: call processReceivedData() for all members
     }
@@ -97,7 +176,7 @@ HTML;
     public static function main(): void
     {
         try {
-            $page = new index();
+            $page = new edit();
             $page->processReceivedData();
             $page->generateView();
         } catch (Exception $e) {
@@ -110,7 +189,7 @@ HTML;
 
 // This call is starting the creation of the page.
 // That is input is processed and output is created.
-index::main();
+edit::main();
 
 // Zend standard does not like closing php-tag!
 // PHP doesn't require the closing tag (it is assumed when the file ends).

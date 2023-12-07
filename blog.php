@@ -5,10 +5,8 @@ declare(strict_types=1);
 
 
 require_once './Page.php';
-include 'parts/nav.php';
 
-
-class index extends Page
+class blog extends Page
 {
     // to do: declare reference variables for members
     // representing substructures/blocks
@@ -48,7 +46,22 @@ class index extends Page
     {
         // to do: fetch data for this view from the database
         // to do: return array containing data
-        return array();
+        $sql = "SELECT * FROM examples where name = 'Blog'";
+
+        $recordset = $this->_database->query($sql);
+        if (!$recordset) {
+            throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+        }
+
+        $result = $recordset->fetch_assoc();
+//        $record = $recordset->fetch_assoc();
+//        while ($record) {
+//            $result[] = $record;
+//            $record = $recordset->fetch_assoc();
+//        }
+
+        $recordset->free();
+        return $result;
     }
 
     /**
@@ -62,11 +75,17 @@ class index extends Page
     protected function generateView(): void
     {
         $data = $this->getViewData(); //NOSONAR ignore unused $data
-        $this->generatePageHeader('Own CMS New', 'js/main.js'); //to do: set optional parameters
-        echo <<< HTML
-    <h1>Willkommen</h1>
-    <p>Dies ist eine richtig gute Content Management System (CMS) Webseite</p>
-HTML;
+        $this->generatePageHeader($data['title'], 'js/main.js'); //to do: set optional parameters
+//        var_dump($data);
+        echo <<< NAVI
+        <a href="dashboard.php">Zurück zu Dashboard</a>
+        $data[navi]
+NAVI;
+
+        echo <<< MAIN
+        $data[content]
+MAIN;
+
         $this->generatePageFooter();
     }
 
@@ -97,7 +116,7 @@ HTML;
     public static function main(): void
     {
         try {
-            $page = new index();
+            $page = new blog();
             $page->processReceivedData();
             $page->generateView();
         } catch (Exception $e) {
@@ -110,7 +129,7 @@ HTML;
 
 // This call is starting the creation of the page.
 // That is input is processed and output is created.
-index::main();
+blog::main();
 
 // Zend standard does not like closing php-tag!
 // PHP doesn't require the closing tag (it is assumed when the file ends).

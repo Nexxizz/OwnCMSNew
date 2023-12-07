@@ -7,8 +7,7 @@ declare(strict_types=1);
 require_once './Page.php';
 include 'parts/nav.php';
 
-
-class index extends Page
+class dashboard extends Page
 {
     // to do: declare reference variables for members
     // representing substructures/blocks
@@ -64,8 +63,11 @@ class index extends Page
         $data = $this->getViewData(); //NOSONAR ignore unused $data
         $this->generatePageHeader('Own CMS New', 'js/main.js'); //to do: set optional parameters
         echo <<< HTML
-    <h1>Willkommen</h1>
-    <p>Dies ist eine richtig gute Content Management System (CMS) Webseite</p>
+        <h1>Dashboard</h1>
+        <p>Hier können Sie Ihre Webseiten verwalten</p>
+        <a href="blog.php">Blog Site ansehen</a>
+        <a href="edit.php">Blog Site editieren</a>
+        <a href="#">Blog Site löschen</a>
 HTML;
         $this->generatePageFooter();
     }
@@ -97,7 +99,7 @@ HTML;
     public static function main(): void
     {
         try {
-            $page = new index();
+            $page = new dashboard();
             $page->processReceivedData();
             $page->generateView();
         } catch (Exception $e) {
@@ -110,7 +112,7 @@ HTML;
 
 // This call is starting the creation of the page.
 // That is input is processed and output is created.
-index::main();
+dashboard::main();
 
 // Zend standard does not like closing php-tag!
 // PHP doesn't require the closing tag (it is assumed when the file ends).
