@@ -5,9 +5,8 @@ declare(strict_types=1);
 
 
 require_once './Page.php';
-include 'parts/nav.php';
 
-class dashboard extends Page
+class viewUserContent extends Page
 {
     // to do: declare reference variables for members
     // representing substructures/blocks
@@ -47,24 +46,27 @@ class dashboard extends Page
     {
         // to do: fetch data for this view from the database
         // to do: return array containing data
-        // to do: fetch data for this view from the database
-        // to do: return array containing data
-        $sql = "SELECT * FROM content_of_user";
+        if (isset($_GET['site'])) {
+            $siteName = $this->_database->real_escape_string($_GET['site']);
+            $sql = "SELECT * FROM content_of_user where name = '$siteName'";
 
-        $recordset = $this->_database->query($sql);
-        if (!$recordset) {
-            throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+            $recordset = $this->_database->query($sql);
+            if (!$recordset) {
+                throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+            }
+
+            $result = $recordset->fetch_assoc();
+//        $record = $recordset->fetch_assoc();
+//        while ($record) {
+//            $result[] = $record;
+//            $record = $recordset->fetch_assoc();
+//        }
+
+            $recordset->free();
+            return $result;
         }
 
-        $result = array();
-        $record = $recordset->fetch_assoc();
-        while ($record) {
-            $result[] = $record;
-            $record = $recordset->fetch_assoc();
-        }
-
-        $recordset->free();
-        return $result;
+        return array();
     }
 
     /**
@@ -78,21 +80,16 @@ class dashboard extends Page
     protected function generateView(): void
     {
         $data = $this->getViewData(); //NOSONAR ignore unused $data
-        $this->generatePageHeader('Own CMS New', 'js/main.js'); //to do: set optional parameters
-
-        echo <<< INFO
-        <h1>Dashboard</h1>
-        <p>Hier können Sie Ihre Webseiten verwalten</p>
-INFO;
+        $this->generatePageHeader($data['title'], 'js/main.js'); //to do: set optional parameters
 //        var_dump($data);
+        echo <<< NAVI
+        <a href="dashboard.php">Zurück zu Dashboard</a>
+        $data[navi]
+NAVI;
 
-        foreach($data as $site){
-            echo <<< HTML
-        <a href="viewUserContent.php?site=$site[name]">$site[name] Seite ansehen</a>
-        <a href="edit.php?site=$site[name]"">Seite editieren</a>
-        <a href="#">Blog Site löschen</a>
-HTML;
-        }
+        echo <<< MAIN
+        $data[content]
+MAIN;
 
         $this->generatePageFooter();
     }
@@ -106,10 +103,6 @@ HTML;
     protected function processReceivedData(): void
     {
         parent::processReceivedData();
-
-//        if(isset($_GET['site']) && isset($_SESSION['nutzerId'])) {
-//
-//        }
 
         // to do: call processReceivedData() for all members
     }
@@ -128,7 +121,7 @@ HTML;
     public static function main(): void
     {
         try {
-            $page = new dashboard();
+            $page = new viewUserContent();
             $page->processReceivedData();
             $page->generateView();
         } catch (Exception $e) {
@@ -141,7 +134,7 @@ HTML;
 
 // This call is starting the creation of the page.
 // That is input is processed and output is created.
-dashboard::main();
+viewUserContent::main();
 
 // Zend standard does not like closing php-tag!
 // PHP doesn't require the closing tag (it is assumed when the file ends).

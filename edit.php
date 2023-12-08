@@ -50,7 +50,7 @@ class edit extends Page
 
         $siteName = $this->_database->real_escape_string($_GET['site']);
 
-        $sql = "SELECT * FROM examples where name = '$siteName'";
+        $sql = "SELECT * FROM content_of_user where name = '$siteName'";
 
         $recordset = $this->_database->query($sql);
         if (!$recordset) {
@@ -130,7 +130,7 @@ MAIN;
             $siteName = $this->_database->real_escape_string($_GET['site']);
             if (isset($_POST['titel'])) {
                 $saveTitel = $this->_database->real_escape_string($_POST['titel']);
-                $sqlUpdateOrdArt = "UPDATE examples SET title = '$saveTitel' WHERE name = '$siteName'";
+                $sqlUpdateOrdArt = "UPDATE content_of_user SET title = '$saveTitel' WHERE name = '$siteName'";
 
                 $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
 
@@ -143,7 +143,7 @@ MAIN;
 
             if (isset($_POST['navi'])) {
                 $saveNavi = $this->_database->real_escape_string($_POST['navi']);
-                $sqlUpdateOrdArt = "UPDATE examples SET navi = '$saveNavi' WHERE name = '$siteName'";
+                $sqlUpdateOrdArt = "UPDATE content_of_user SET navi = '$saveNavi' WHERE name = '$siteName'";
 
                 $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
 
@@ -156,7 +156,7 @@ MAIN;
 
             if (isset($_POST['content'])) {
                 $saveContent = $this->_database->real_escape_string($_POST['content']);
-                $sqlUpdateOrdArt = "UPDATE examples SET content = '$saveContent' WHERE name = '$siteName'";
+                $sqlUpdateOrdArt = "UPDATE content_of_user SET content = '$saveContent' WHERE name = '$siteName'";
 
                 $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
 

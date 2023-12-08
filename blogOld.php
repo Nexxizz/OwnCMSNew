@@ -51,10 +51,6 @@ echo <<< FOOTER
 </html>
 FOOTER;
 
-if(isset($_POST['postinhalt'])) {
-
-}
-
 ?>
 
 

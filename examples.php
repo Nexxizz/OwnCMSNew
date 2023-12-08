@@ -108,10 +108,26 @@ HTML;
         parent::processReceivedData();
 
         if(isset($_GET['id']) && isset($_SESSION['nutzerId'])) {
+
             $nutzerId = intval($_SESSION['nutzerId']);
             $siteId = intval($this->_database->real_escape_string($_GET['id']));
 
-            $sqlInsert = "INSERT INTO content_of_user(nutzerId, examplesId) VALUES ('$nutzerId', '$siteId')";
+            $sqlSelect = "SELECT * FROM examples WHERE id='$siteId' ";
+
+            $recordset = $this->_database->query($sqlSelect);
+            if (!$recordset) {
+                throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+            }
+
+            $record = $recordset->fetch_assoc();
+
+            $name = $record['name'];
+            $title = $record['title'];
+            $navi = $record['navi'];
+            $content = $record['content'];
+
+
+            $sqlInsert = "INSERT INTO content_of_user(nutzerId, examplesId, name, title, navi, content) VALUES ('$nutzerId', '$siteId', '$name', '$title', '$navi', '$content')";
 
             $sqlCheck = $this->_database->query($sqlInsert);
 
