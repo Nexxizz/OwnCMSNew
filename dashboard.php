@@ -91,6 +91,7 @@ INFO;
         <a href="viewUserContent.php?site=$site[name]">$site[name] Seite ansehen</a>
         <a href="edit.php?site=$site[name]"">Seite editieren</a>
         <a href="#">Blog Site löschen</a>
+        <br>
 HTML;
         }
 

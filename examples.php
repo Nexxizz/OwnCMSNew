@@ -89,6 +89,7 @@ INFO;
             echo <<< HTML
         <a href="view.php?site=$site[name]">$site[name] Seite ansehen</a>
         <a href="examples.php?id=$site[id]">Seite hinzufügen</a>
+        <br>
 HTML;
         }
 //        <a href="edit.php">Seite editieren</a>
