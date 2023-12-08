@@ -47,7 +47,24 @@ class dashboard extends Page
     {
         // to do: fetch data for this view from the database
         // to do: return array containing data
-        return array();
+        // to do: fetch data for this view from the database
+        // to do: return array containing data
+        $sql = "SELECT * FROM content_of_user INNER JOIN examples ON examples.id = content_of_user.id";
+
+        $recordset = $this->_database->query($sql);
+        if (!$recordset) {
+            throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+        }
+
+        $result = array();
+        $record = $recordset->fetch_assoc();
+        while ($record) {
+            $result[] = $record;
+            $record = $recordset->fetch_assoc();
+        }
+
+        $recordset->free();
+        return $result;
     }
 
     /**
@@ -62,13 +79,21 @@ class dashboard extends Page
     {
         $data = $this->getViewData(); //NOSONAR ignore unused $data
         $this->generatePageHeader('Own CMS New', 'js/main.js'); //to do: set optional parameters
-        echo <<< HTML
+
+        echo <<< INFO
         <h1>Dashboard</h1>
         <p>Hier können Sie Ihre Webseiten verwalten</p>
-        <a href="blog.php">Blog Site ansehen</a>
-        <a href="edit.php">Blog Site editieren</a>
+INFO;
+//        var_dump($data);
+
+        foreach($data as $site){
+            echo <<< HTML
+        <a href="view.php?site=$site[name]">$site[name] Seite ansehen</a>
+        <a href="edit.php?site=$site[name]"">Seite editieren</a>
         <a href="#">Blog Site löschen</a>
 HTML;
+        }
+
         $this->generatePageFooter();
     }
 
@@ -81,6 +106,10 @@ HTML;
     protected function processReceivedData(): void
     {
         parent::processReceivedData();
+
+//        if(isset($_GET['site']) && isset($_SESSION['nutzerId'])) {
+//
+//        }
 
         // to do: call processReceivedData() for all members
     }

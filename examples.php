@@ -5,8 +5,9 @@ declare(strict_types=1);
 
 
 require_once './Page.php';
+include 'parts/nav.php';
 
-class login extends Page
+class examples extends Page
 {
     // to do: declare reference variables for members
     // representing substructures/blocks
@@ -46,7 +47,23 @@ class login extends Page
     {
         // to do: fetch data for this view from the database
         // to do: return array containing data
-        return array();
+        // to do: fetch data for this view from the database
+        // to do: return array containing data
+        $sql = "SELECT * FROM examples";
+
+        $recordset = $this->_database->query($sql);
+        if (!$recordset) {
+            throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+        }
+
+        $record = $recordset->fetch_assoc();
+        while ($record) {
+            $result[] = $record;
+            $record = $recordset->fetch_assoc();
+        }
+
+        $recordset->free();
+        return $result;
     }
 
     /**
@@ -61,16 +78,21 @@ class login extends Page
     {
         $data = $this->getViewData(); //NOSONAR ignore unused $data
         $this->generatePageHeader('Own CMS New', 'js/main.js'); //to do: set optional parameters
-        echo <<< HTML
-    <h1>Login</h1>
-    <form method="post" action="login.php" accept-charset="utf-8">
-    <label for="email">eMail</label>
-    <input type="email" id="email" placeholder="Max@mail.de" name="email" required>
-    <label for="pw">Password</label>
-    <input type="password" id="pw" placeholder="eg32-g23" name="pw" required>
-    <input type="submit">
-    </form>
+
+        echo <<< INFO
+        <h1>Beispielsseiten</h1>
+        <p>Hier sind ein paar Beispielsseiten</p>
+INFO;
+
+
+        foreach($data as $site){
+            echo <<< HTML
+        <a href="view.php?site=$site[name]">$site[name] Seite ansehen</a>
+        <a href="examples.php?id=$site[id]">Seite hinzufügen</a>
 HTML;
+        }
+//        <a href="edit.php">Seite editieren</a>
+//        <a href="#">Blog Site löschen</a>
         $this->generatePageFooter();
     }
 
@@ -84,25 +106,23 @@ HTML;
     {
         session_start();
         parent::processReceivedData();
-        if (isset($_POST['email']) && isset($_POST['pw'])) {
-            if ($stm = $this->_database->prepare('SELECT * FROM users WHERE email = ? AND password = ?')) {
-//        $hashed = SHA1($_POST['password']);
-                $stm->bind_param('ss',  $_POST['email'], $_POST['pw']);
-                $stm->execute();
-                $result = $stm->get_result();
-                $user = $result->fetch_assoc();
-                if ($user) {
-                    $_SESSION['nutzerId'] = $user['id'];
-                    echo "You have successfully logged in";
-//                    header("HTTP/1.1 303 See Other");
 
-                    header('Location: dashboard.php');
-                    die();
-                } else {
-                    echo "Benutzer konnte nicht gefunden werden";
-                }
-                $stm->close();
+        if(isset($_GET['id']) && isset($_SESSION['nutzerId'])) {
+            $nutzerId = intval($_SESSION['nutzerId']);
+            $siteId = intval($this->_database->real_escape_string($_GET['id']));
+
+            $sqlInsert = "INSERT INTO content_of_user(nutzerId, examplesId) VALUES ('$nutzerId', '$siteId')";
+
+            $sqlCheck = $this->_database->query($sqlInsert);
+
+            echo "Seite hinzugefügt";
+
+            if (!$sqlCheck) {
+                throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
             }
+
+
+
         }
 
         // to do: call processReceivedData() for all members
@@ -122,7 +142,7 @@ HTML;
     public static function main(): void
     {
         try {
-            $page = new login();
+            $page = new examples();
             $page->processReceivedData();
             $page->generateView();
         } catch (Exception $e) {
@@ -135,7 +155,7 @@ HTML;
 
 // This call is starting the creation of the page.
 // That is input is processed and output is created.
-login::main();
+examples::main();
 
 // Zend standard does not like closing php-tag!
 // PHP doesn't require the closing tag (it is assumed when the file ends).

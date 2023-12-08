@@ -46,7 +46,11 @@ class edit extends Page
     {
         // to do: fetch data for this view from the database
         // to do: return array containing data
-        $sql = "SELECT * FROM examples where name = 'Blog'";
+        if (isset($_GET['site'])) {
+
+        $siteName = $this->_database->real_escape_string($_GET['site']);
+
+        $sql = "SELECT * FROM examples where name = '$siteName'";
 
         $recordset = $this->_database->query($sql);
         if (!$recordset) {
@@ -62,6 +66,8 @@ class edit extends Page
 
         $recordset->free();
         return $result;
+        }
+        return array();
     }
 
     /**
@@ -75,17 +81,16 @@ class edit extends Page
     protected function generateView(): void
     {
         $data = $this->getViewData(); //NOSONAR ignore unused $data
-
-
+        if($data != array()) {
         $this->generatePageHeader('Own CMS New', 'js/main.js'); //to do: set optional parameters
         $titel = htmlspecialchars($data['title']);
         $navi = htmlspecialchars($data['navi']);
         $content = htmlspecialchars($data['content']);
-
+        $siteName = $data['name'];
         echo <<< TITEL
         <a href="dashboard.php">Zurück zu Dashboard</a>
 
-        <form action="edit.php" method="post" accept-charset="utf-8">
+        <form action="edit.php?site=$siteName" method="post" accept-charset="utf-8">
         <h3>Titel</h3>
         <textarea rows="5" cols="120" name="titel">$titel</textarea>
         <input type="submit" value="Editieren">
@@ -94,7 +99,7 @@ TITEL;
 
 
         echo <<< NAVI
-        <form action="edit.php" method="post" accept-charset="utf-8">
+        <form action="edit.php?site=$siteName" method="post" accept-charset="utf-8">
         <h3>Navigation</h3>
         <textarea rows="15" cols="120" name="navi">$navi</textarea>
         <input type="submit" value="Editieren">
@@ -102,7 +107,7 @@ TITEL;
 NAVI;
 
         echo <<< MAIN
-        <form action="edit.php" method="post" accept-charset="utf-8">
+        <form action="edit.php?site=$siteName" method="post" accept-charset="utf-8">
         <h3>Content</h3>
         <textarea rows="20" cols="120" name="content">$content</textarea>
         <input type="submit" value="Editieren">
@@ -111,7 +116,7 @@ MAIN;
 
         $this->generatePageFooter();
     }
-
+    }
     /**
      * Processes the data that comes via GET or POST.
      * If this page is supposed to do something with submitted
@@ -121,43 +126,48 @@ MAIN;
     protected function processReceivedData(): void
     {
         parent::processReceivedData();
+        if (isset($_GET['site'])) {
+            $siteName = $this->_database->real_escape_string($_GET['site']);
+            if (isset($_POST['titel'])) {
+                $saveTitel = $this->_database->real_escape_string($_POST['titel']);
+                $sqlUpdateOrdArt = "UPDATE examples SET title = '$saveTitel' WHERE name = '$siteName'";
 
-        if(isset($_POST['titel'])){
-            $saveTitel = $this->_database->real_escape_string($_POST['titel']);
-            $sqlUpdateOrdArt = "UPDATE examples SET title = '$saveTitel'";
+                $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
 
-            $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
-
-            if (!$sqlUpdateCheck) {
-                throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+                if (!$sqlUpdateCheck) {
+                    throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+                }
+                echo "Titel editiert";
+//                header('Location: edit.php?site='.$siteName);
             }
-            echo "Titel editiert";
-        }
 
-        if(isset($_POST['navi'])){
-            $saveNavi = $this->_database->real_escape_string($_POST['navi']);
-            $sqlUpdateOrdArt = "UPDATE examples SET navi = '$saveNavi'";
+            if (isset($_POST['navi'])) {
+                $saveNavi = $this->_database->real_escape_string($_POST['navi']);
+                $sqlUpdateOrdArt = "UPDATE examples SET navi = '$saveNavi' WHERE name = '$siteName'";
 
-            $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
+                $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
 
-            if (!$sqlUpdateCheck) {
-                throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+                if (!$sqlUpdateCheck) {
+                    throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+                }
+                echo "Navi editiert";
+//                header('Location: edit.php?site='.$siteName);
             }
-            echo "Navi editiert";
-        }
 
-        if(isset($_POST['content'])){
-           $saveContent = $this->_database->real_escape_string($_POST['content']);
-            $sqlUpdateOrdArt = "UPDATE examples SET content = '$saveContent'";
+            if (isset($_POST['content'])) {
+                $saveContent = $this->_database->real_escape_string($_POST['content']);
+                $sqlUpdateOrdArt = "UPDATE examples SET content = '$saveContent' WHERE name = '$siteName'";
 
-            $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
+                $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
 
-            if (!$sqlUpdateCheck) {
-                throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+                if (!$sqlUpdateCheck) {
+                    throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+                }
+                echo "Content editiert";
+//                header('Location: edit.php?site='.$siteName);
             }
-            echo "Content editiert";
-        }
 
+        }
 
         // to do: call processReceivedData() for all members
     }

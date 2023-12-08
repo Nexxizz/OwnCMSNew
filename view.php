@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 require_once './Page.php';
 
-class login extends Page
+class view extends Page
 {
     // to do: declare reference variables for members
     // representing substructures/blocks
@@ -46,6 +46,26 @@ class login extends Page
     {
         // to do: fetch data for this view from the database
         // to do: return array containing data
+        if (isset($_GET['site'])) {
+            $siteName = $this->_database->real_escape_string($_GET['site']);
+            $sql = "SELECT * FROM examples where name = '$siteName'";
+
+            $recordset = $this->_database->query($sql);
+            if (!$recordset) {
+                throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+            }
+
+            $result = $recordset->fetch_assoc();
+//        $record = $recordset->fetch_assoc();
+//        while ($record) {
+//            $result[] = $record;
+//            $record = $recordset->fetch_assoc();
+//        }
+
+            $recordset->free();
+            return $result;
+        }
+
         return array();
     }
 
@@ -60,17 +80,17 @@ class login extends Page
     protected function generateView(): void
     {
         $data = $this->getViewData(); //NOSONAR ignore unused $data
-        $this->generatePageHeader('Own CMS New', 'js/main.js'); //to do: set optional parameters
-        echo <<< HTML
-    <h1>Login</h1>
-    <form method="post" action="login.php" accept-charset="utf-8">
-    <label for="email">eMail</label>
-    <input type="email" id="email" placeholder="Max@mail.de" name="email" required>
-    <label for="pw">Password</label>
-    <input type="password" id="pw" placeholder="eg32-g23" name="pw" required>
-    <input type="submit">
-    </form>
-HTML;
+        $this->generatePageHeader($data['title'], 'js/main.js'); //to do: set optional parameters
+//        var_dump($data);
+        echo <<< NAVI
+        <a href="examples.php">Zurück zu Beispielsseiten</a>
+        $data[navi]
+NAVI;
+
+        echo <<< MAIN
+        $data[content]
+MAIN;
+
         $this->generatePageFooter();
     }
 
@@ -82,28 +102,7 @@ HTML;
      */
     protected function processReceivedData(): void
     {
-        session_start();
         parent::processReceivedData();
-        if (isset($_POST['email']) && isset($_POST['pw'])) {
-            if ($stm = $this->_database->prepare('SELECT * FROM users WHERE email = ? AND password = ?')) {
-//        $hashed = SHA1($_POST['password']);
-                $stm->bind_param('ss',  $_POST['email'], $_POST['pw']);
-                $stm->execute();
-                $result = $stm->get_result();
-                $user = $result->fetch_assoc();
-                if ($user) {
-                    $_SESSION['nutzerId'] = $user['id'];
-                    echo "You have successfully logged in";
-//                    header("HTTP/1.1 303 See Other");
-
-                    header('Location: dashboard.php');
-                    die();
-                } else {
-                    echo "Benutzer konnte nicht gefunden werden";
-                }
-                $stm->close();
-            }
-        }
 
         // to do: call processReceivedData() for all members
     }
@@ -122,7 +121,7 @@ HTML;
     public static function main(): void
     {
         try {
-            $page = new login();
+            $page = new view();
             $page->processReceivedData();
             $page->generateView();
         } catch (Exception $e) {
@@ -135,7 +134,7 @@ HTML;
 
 // This call is starting the creation of the page.
 // That is input is processed and output is created.
-login::main();
+view::main();
 
 // Zend standard does not like closing php-tag!
 // PHP doesn't require the closing tag (it is assumed when the file ends).
