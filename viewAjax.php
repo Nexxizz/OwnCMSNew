@@ -5,9 +5,8 @@ declare(strict_types=1);
 
 
 require_once './Page.php';
-include 'parts/nav.php';
 
-class examples extends Page
+class viewAjax extends Page
 {
     // to do: declare reference variables for members
     // representing substructures/blocks
@@ -47,23 +46,27 @@ class examples extends Page
     {
         // to do: fetch data for this view from the database
         // to do: return array containing data
-        // to do: fetch data for this view from the database
-        // to do: return array containing data
-        $sql = "SELECT * FROM examples";
-
-        $recordset = $this->_database->query($sql);
-        if (!$recordset) {
-            throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
-        }
-
-        $record = $recordset->fetch_assoc();
-        while ($record) {
-            $result[] = $record;
-            $record = $recordset->fetch_assoc();
-        }
-
-        $recordset->free();
-        return $result;
+//        if (isset($_GET['site'])) {
+//            $siteName = $this->_database->real_escape_string($_GET['site']);
+//            $sql = "SELECT * FROM examples where name = '$siteName'";
+//
+//            $recordset = $this->_database->query($sql);
+//            if (!$recordset) {
+//                throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+//            }
+//
+//            $result = $recordset->fetch_assoc();
+////        $record = $recordset->fetch_assoc();
+////        while ($record) {
+////            $result[] = $record;
+////            $record = $recordset->fetch_assoc();
+////        }
+//
+//            $recordset->free();
+//            return $result;
+//        }
+//
+        return array();
     }
 
     /**
@@ -77,27 +80,31 @@ class examples extends Page
     protected function generateView(): void
     {
         $data = $this->getViewData(); //NOSONAR ignore unused $data
-        $this->generatePageHeader('Own CMS New', 'js/main.js'); //to do: set optional parameters
+//        $this->generatePageHeader($data['title'], 'js/main.js'); //to do: set optional parameters
+//        var_dump($data);
+        echo <<< HEAD
+        <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="stylesheet" type="text/css" href="css/style.css">
+        <head><title id='viewAjaxTitle'></title></head>
+HEAD;
+        $siteName = $this->_database->real_escape_string($_GET['site']);
 
-        echo "<body id='examplesBody'><script src='js/StatusUpdateViewAjax.js'></script>";
+//        echo "$site";
+        echo "<body id='viewAjaxBody' onload='ajaxInstance.requestData()' data-info='$siteName'><script src='js/StatusUpdateViewAjax.js'></script>";
+        echo "<a href='examples.php'>zurück zu Beispielsseiten</a>";
 
-        echo <<< INFO
-        <h1>Beispielsseiten</h1>
-        <p>Hier sind ein paar Beispielsseiten</p>
-INFO;
-
-//        <a href="view.php?site=$site[name]">$site[name] Seite ansehen</a>
-
-        foreach($data as $site){
-            echo <<< HTML
-        <a href="viewAjax.php?site=$site[name]" id="ajaxLink">$site[name] Seite ansehen</a>
-        <a href="examples.php?id=$site[id]">Seite hinzufügen</a>
-        <br>
-HTML;
-        }
-//        <a href="edit.php">Seite editieren</a>
-//        <a href="#">Blog Site löschen</a>
-        $this->generatePageFooter();
+//        echo <<< NAVI
+//        <a href="examples.php">Zurück zu Beispielsseiten</a>
+//        $data[navi]
+//NAVI;
+//
+//        echo <<< MAIN
+//        $data[content]
+//MAIN;
+//
+//        $this->generatePageFooter();
     }
 
     /**
@@ -108,42 +115,7 @@ HTML;
      */
     protected function processReceivedData(): void
     {
-        session_start();
         parent::processReceivedData();
-
-        if(isset($_GET['id']) && isset($_SESSION['nutzerId'])) {
-
-            $nutzerId = intval($_SESSION['nutzerId']);
-            $siteId = intval($this->_database->real_escape_string($_GET['id']));
-
-            $sqlSelect = "SELECT * FROM examples WHERE id='$siteId' ";
-
-            $recordset = $this->_database->query($sqlSelect);
-            if (!$recordset) {
-                throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
-            }
-
-            $record = $recordset->fetch_assoc();
-
-            $name = $record['name'];
-            $title = $record['title'];
-            $navi = $record['navi'];
-            $content = $record['content'];
-
-
-            $sqlInsert = "INSERT INTO content_of_user(nutzerId, examplesId, name, title, navi, content) VALUES ('$nutzerId', '$siteId', '$name', '$title', '$navi', '$content')";
-
-            $sqlCheck = $this->_database->query($sqlInsert);
-
-            echo "Seite hinzugefügt";
-
-            if (!$sqlCheck) {
-                throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
-            }
-
-
-
-        }
 
         // to do: call processReceivedData() for all members
     }
@@ -162,7 +134,7 @@ HTML;
     public static function main(): void
     {
         try {
-            $page = new examples();
+            $page = new viewAjax();
             $page->processReceivedData();
             $page->generateView();
         } catch (Exception $e) {
@@ -175,7 +147,7 @@ HTML;
 
 // This call is starting the creation of the page.
 // That is input is processed and output is created.
-examples::main();
+viewAjax::main();
 
 // Zend standard does not like closing php-tag!
 // PHP doesn't require the closing tag (it is assumed when the file ends).

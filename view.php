@@ -46,9 +46,10 @@ class view extends Page
     {
         // to do: fetch data for this view from the database
         // to do: return array containing data
-        if (isset($_GET['site'])) {
+
             $siteName = $this->_database->real_escape_string($_GET['site']);
-            $sql = "SELECT * FROM examples where name = '$siteName'";
+
+            $sql = "SELECT * FROM examples WHERE name = '$siteName'";
 
             $recordset = $this->_database->query($sql);
             if (!$recordset) {
@@ -64,9 +65,9 @@ class view extends Page
 
             $recordset->free();
             return $result;
-        }
+//        }
 
-        return array();
+//        return array();
     }
 
     /**
@@ -79,19 +80,31 @@ class view extends Page
      */
     protected function generateView(): void
     {
+        header("Content-Type: application/json; charset=UTF-8");
+
         $data = $this->getViewData(); //NOSONAR ignore unused $data
-        $this->generatePageHeader($data['title'], 'js/main.js'); //to do: set optional parameters
+//        $this->generatePageHeader($data['title'], 'js/main.js'); //to do: set optional parameters
 //        var_dump($data);
-        echo <<< NAVI
-        <a href="examples.php">Zurück zu Beispielsseiten</a>
-        $data[navi]
-NAVI;
+        if (!empty($data)) {
 
-        echo <<< MAIN
-        $data[content]
-MAIN;
+//            $escapedArray = array_map(function($value) {
+//                return htmlspecialchars($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+//            }, $data);
 
-        $this->generatePageFooter();
+            $serializedData = json_encode($data);
+
+            echo $serializedData;
+//        echo <<< NAVI
+//        <a href="examples.php">Zurück zu Beispielsseiten</a>
+//        $data[navi]
+//NAVI;
+//
+//        echo <<< MAIN
+//        $data[content]
+//MAIN;
+//
+//        $this->generatePageFooter();
+        }
     }
 
     /**
