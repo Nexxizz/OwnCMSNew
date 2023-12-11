@@ -9,7 +9,7 @@ class AjaxRequest {
         // if (this.name !== '') {
         if (obj && obj.hasAttribute('data-info')) {
             this.name = obj.getAttribute('data-info');
-            console.log(this.name);
+            // console.log(this.name);
             this.request.open("GET", "view.php?site=" + this.name);
             this.request.onreadystatechange = this.processData.bind(this);
             this.request.send(null);
@@ -37,12 +37,14 @@ class AjaxRequest {
         let obj = JSON.parse(data);
         let bodyViewAjax = document.getElementById("viewAjaxBody");
 
-        console.log(obj.navi.toString());
+        // console.log(obj.navi.toString());
+        // bodyViewAjax.append(obj.navi);
+
 
         bodyViewAjax.innerHTML += obj.navi;
         bodyViewAjax.innerHTML += obj.content;
 
-        console.log(obj.title);
+        // console.log(obj.title);
     }
 }
 

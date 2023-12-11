@@ -79,7 +79,7 @@ class examples extends Page
         $data = $this->getViewData(); //NOSONAR ignore unused $data
         $this->generatePageHeader('Own CMS New', 'js/main.js'); //to do: set optional parameters
 
-        echo "<body id='examplesBody'><script src='js/StatusUpdateViewAjax.js'></script>";
+//        echo "<body id='examplesBody'><script src='js/StatusUpdateViewAjax.js'></script>";
 
         echo <<< INFO
         <h1>Beispielsseiten</h1>
