@@ -65,7 +65,7 @@ class index extends Page
         $this->generatePageHeader('Own CMS New', 'js/main.js'); //to do: set optional parameters
         echo <<< HTML
     <h1>Willkommen</h1>
-    <p>Dies ist eine richtig gute Content Management System (CMS) Webseite</p>
+    <p>Dies ist eine Content Management System (CMS) Webseite</p>
 HTML;
         $this->generatePageFooter();
     }
