@@ -89,6 +89,7 @@ NAVI;
 
         echo <<< MAIN
         $data[content]
+        $data[footer]
 MAIN;
 
         $this->generatePageFooter();

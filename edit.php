@@ -86,6 +86,7 @@ class edit extends Page
         $titel = htmlspecialchars($data['title']);
         $navi = htmlspecialchars($data['navi']);
         $content = htmlspecialchars($data['content']);
+        $footer = htmlspecialchars($data['footer']);
         $siteName = $data['name'];
         echo <<< TITEL
         <a href="dashboard.php">Zurück zu Dashboard</a>
@@ -113,6 +114,14 @@ NAVI;
         <input type="submit" value="Editieren">
         </form>
 MAIN;
+
+        echo <<< FOOTER
+        <form action="edit.php?site=$siteName" method="post" accept-charset="utf-8">
+        <h3>Content</h3>
+        <textarea rows="20" cols="120" name="footer">$footer</textarea>
+        <input type="submit" value="Editieren">
+        </form>
+FOOTER;
 
         $this->generatePageFooter();
     }
@@ -157,6 +166,19 @@ MAIN;
             if (isset($_POST['content'])) {
                 $saveContent = $this->_database->real_escape_string($_POST['content']);
                 $sqlUpdateOrdArt = "UPDATE content_of_user SET content = '$saveContent' WHERE name = '$siteName'";
+
+                $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
+
+                if (!$sqlUpdateCheck) {
+                    throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+                }
+                echo "Content editiert";
+//                header('Location: edit.php?site='.$siteName);
+            }
+
+            if (isset($_POST['footer'])) {
+                $saveFooter = $this->_database->real_escape_string($_POST['footer']);
+                $sqlUpdateOrdArt = "UPDATE content_of_user SET footer = '$saveFooter' WHERE name = '$siteName'";
 
                 $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
 

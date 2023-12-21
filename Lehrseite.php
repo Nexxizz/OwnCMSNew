@@ -11,11 +11,12 @@ echo <<< HEADER
     <link href="./css/style.css" rel="stylesheet">
     <title>Lehr Seite HTML/CSS/PHP</title>
 </head>
-<body>
+
 
 HEADER;
 
 echo <<< NAVI
+<body>
 <nav>
 <a href="#HTMLSection">HTML</a>
 <a href="#CSSSection">CSS</a>
@@ -97,7 +98,11 @@ CSS, oder Cascading Style Sheets, ist eine mächtige Stylesheet-Sprache, die in 
 MAIN;
 
 echo <<< FOOTER
+<footer>
+   <p>&copy; 2023 Lehr Seite HTML/CSS/PHP. Alle Rechte vorbehalten.</p>
+</footer>
 </body>
+
 </html>
 FOOTER;
 

@@ -129,9 +129,10 @@ HTML;
             $title = $record['title'];
             $navi = $record['navi'];
             $content = $record['content'];
+            $footer = $record['footer'];
 
 
-            $sqlInsert = "INSERT INTO content_of_user(nutzerId, examplesId, name, title, navi, content) VALUES ('$nutzerId', '$siteId', '$name', '$title', '$navi', '$content')";
+            $sqlInsert = "INSERT INTO content_of_user(nutzerId, examplesId, name, title, navi, content, footer) VALUES ('$nutzerId', '$siteId', '$name', '$title', '$navi', '$content', '$footer')";
 
             $sqlCheck = $this->_database->query($sqlInsert);
 

@@ -43,6 +43,7 @@ class AjaxRequest {
 
         bodyViewAjax.innerHTML += obj.navi;
         bodyViewAjax.innerHTML += obj.content;
+        bodyViewAjax.innerHTML += obj.footer;
 
         // console.log(obj.title);
     }
