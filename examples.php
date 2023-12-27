@@ -83,7 +83,7 @@ class examples extends Page
 
         echo <<< INFO
         <h1>Beispielsseiten</h1>
-        <p>Hier sind ein paar Beispielsseiten</p>
+        <p>Hier sind ein paar Beispielseiten</p>
 INFO;
 
 //        <a href="view.php?site=$site[name]">$site[name] Seite ansehen</a>
@@ -113,7 +113,7 @@ HTML;
 
         if(isset($_GET['id']) && isset($_SESSION['nutzerId'])) {
 
-            $nutzerId = intval($_SESSION['nutzerId']);
+//            $nutzerId = intval($_SESSION['nutzerId']);
             $siteId = intval($this->_database->real_escape_string($_GET['id']));
 
             $sqlSelect = "SELECT * FROM examples WHERE id='$siteId' ";
@@ -132,17 +132,16 @@ HTML;
             $footer = $record['footer'];
 
 
-            $sqlInsert = "INSERT INTO content_of_user(nutzerId, examplesId, name, title, navi, content, footer) VALUES ('$nutzerId', '$siteId', '$name', '$title', '$navi', '$content', '$footer')";
+            $sqlInsert = "INSERT INTO content_of_user(nutzerId, examplesId, name, title, navi, content, footer) VALUES ('$siteId', '$siteId', '$name', '$title', '$navi', '$content', '$footer')";
 
             $sqlCheck = $this->_database->query($sqlInsert);
 
-            echo "Seite hinzugefügt";
 
             if (!$sqlCheck) {
                 throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
             }
 
-
+            echo "Seite hinzugefügt";
 
         }
 

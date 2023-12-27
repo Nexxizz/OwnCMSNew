@@ -90,7 +90,7 @@ INFO;
             echo <<< HTML
         <a href="viewUserContent.php?site=$site[name]">$site[name] Seite ansehen</a>
         <a href="edit.php?site=$site[name]"">Seite editieren</a>
-        <a href="#">Blog Site löschen</a>
+        <a href="dashboard.php?id=$site[examplesId]">Seite löschen</a>
         <br>
 HTML;
         }
@@ -107,10 +107,21 @@ HTML;
     protected function processReceivedData(): void
     {
         parent::processReceivedData();
+        session_start();
+        if(isset($_GET['id']) && isset($_SESSION['nutzerId'])) {
+            $examplesId =  intval($this->_database->real_escape_string($_GET['id']));
+            $userId = intval($_SESSION['nutzerId']);
 
-//        if(isset($_GET['site']) && isset($_SESSION['nutzerId'])) {
-//
-//        }
+            $sqlDelete = "DELETE FROM content_of_user WHERE examplesId = $examplesId AND nutzerId = $userId";
+
+            $recordset = $this->_database->query($sqlDelete);
+            if (!$recordset) {
+                throw new Exception("Delete fehlgeschlagen: " . $this->_database->error);
+            }
+            else {
+                echo "Seite gelöscht";
+            }
+        }
 
         // to do: call processReceivedData() for all members
     }
