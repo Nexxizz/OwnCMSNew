@@ -39,7 +39,9 @@ class AjaxRequest {
 
         // console.log(obj.navi.toString());
         // bodyViewAjax.append(obj.navi);
+        let titleViewAjax = document.getElementById("viewAjaxTitle");
 
+        titleViewAjax.innerHTML = obj.title;
 
         bodyViewAjax.innerHTML += obj.navi;
         bodyViewAjax.innerHTML += obj.content;
