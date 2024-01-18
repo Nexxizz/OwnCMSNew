@@ -79,7 +79,7 @@ class viewAjax extends Page
      */
     protected function generateView(): void
     {
-        $data = $this->getViewData(); //NOSONAR ignore unused $data
+//        $data = $this->getViewData(); //NOSONAR ignore unused $data
 //        $this->generatePageHeader($data['title'], 'js/main.js'); //to do: set optional parameters
 //        var_dump($data);
         echo <<< HEAD

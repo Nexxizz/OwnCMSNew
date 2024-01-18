@@ -113,7 +113,7 @@ HTML;
 
         if(isset($_GET['id']) && isset($_SESSION['nutzerId'])) {
 
-//            $nutzerId = intval($_SESSION['nutzerId']);
+            $nutzerId = intval($_SESSION['nutzerId']);
             $siteId = intval($this->_database->real_escape_string($_GET['id']));
 
             $sqlSelect = "SELECT * FROM examples WHERE id='$siteId' ";
@@ -132,7 +132,7 @@ HTML;
             $footer = $record['footer'];
 
 
-            $sqlInsert = "INSERT INTO content_of_user(nutzerId, examplesId, name, title, navi, content, footer) VALUES ('$siteId', '$siteId', '$name', '$title', '$navi', '$content', '$footer')";
+            $sqlInsert = "INSERT INTO content_of_user(nutzerId, examplesId, name, title, navi, content, footer) VALUES ('$nutzerId', '$siteId', '$name', '$title', '$navi', '$content', '$footer')";
 
             $sqlCheck = $this->_database->query($sqlInsert);
 
