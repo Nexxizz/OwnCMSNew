@@ -5,9 +5,8 @@ declare(strict_types=1);
 
 
 require_once './Page.php';
-include 'parts/nav.php';
 
-class dashboard extends Page
+class editGetJson extends Page
 {
     // to do: declare reference variables for members
     // representing substructures/blocks
@@ -47,24 +46,28 @@ class dashboard extends Page
     {
         // to do: fetch data for this view from the database
         // to do: return array containing data
-        // to do: fetch data for this view from the database
-        // to do: return array containing data
-        $sql = "SELECT * FROM content_of_user";
+
+        $siteName = $this->_database->real_escape_string($_GET['site']);
+
+        $sql = "SELECT * FROM content_of_user WHERE name = '$siteName'";
 
         $recordset = $this->_database->query($sql);
         if (!$recordset) {
             throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
         }
 
-        $result = array();
-        $record = $recordset->fetch_assoc();
-        while ($record) {
-            $result[] = $record;
-            $record = $recordset->fetch_assoc();
-        }
+        $result = $recordset->fetch_assoc();
+//        $record = $recordset->fetch_assoc();
+//        while ($record) {
+//            $result[] = $record;
+//            $record = $recordset->fetch_assoc();
+//        }
 
         $recordset->free();
         return $result;
+//        }
+
+//        return array();
     }
 
     /**
@@ -77,25 +80,31 @@ class dashboard extends Page
      */
     protected function generateView(): void
     {
+        header("Content-Type: application/json; charset=UTF-8");
+
         $data = $this->getViewData(); //NOSONAR ignore unused $data
-        $this->generatePageHeader('Own CMS New', 'js/main.js'); //to do: set optional parameters
-
-        echo <<< INFO
-        <h1>Dashboard</h1>
-        <p>Hier können Sie Ihre Webseiten verwalten</p>
-INFO;
+//        $this->generatePageHeader($data['title'], 'js/main.js'); //to do: set optional parameters
 //        var_dump($data);
+        if (!empty($data)) {
 
-        foreach($data as $site){
-            echo <<< HTML
-        <a href="viewUserContent.php?site=$site[name]">$site[name] Seite ansehen</a>
-        <a href="editAjax.php?site=$site[name]"">Seite editieren</a>
-        <a href="dashboard.php?id=$site[examplesId]">Seite löschen</a>
-        <br>
-HTML;
+//            $escapedArray = array_map(function($value) {
+//                return htmlspecialchars($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+//            }, $data);
+
+            $serializedData = json_encode($data);
+
+            echo $serializedData;
+//        echo <<< NAVI
+//        <a href="examples.php">Zurück zu Beispielsseiten</a>
+//        $data[navi]
+//NAVI;
+//
+//        echo <<< MAIN
+//        $data[content]
+//MAIN;
+//
+//        $this->generatePageFooter();
         }
-
-        $this->generatePageFooter();
     }
 
     /**
@@ -107,21 +116,6 @@ HTML;
     protected function processReceivedData(): void
     {
         parent::processReceivedData();
-        session_start();
-        if(isset($_GET['id']) && isset($_SESSION['nutzerId'])) {
-            $examplesId =  intval($this->_database->real_escape_string($_GET['id']));
-            $userId = intval($_SESSION['nutzerId']);
-
-            $sqlDelete = "DELETE FROM content_of_user WHERE examplesId = $examplesId AND nutzerId = $userId";
-
-            $recordset = $this->_database->query($sqlDelete);
-            if (!$recordset) {
-                throw new Exception("Delete fehlgeschlagen: " . $this->_database->error);
-            }
-            else {
-                echo "Seite gelöscht";
-            }
-        }
 
         // to do: call processReceivedData() for all members
     }
@@ -140,7 +134,7 @@ HTML;
     public static function main(): void
     {
         try {
-            $page = new dashboard();
+            $page = new editGetJson();
             $page->processReceivedData();
             $page->generateView();
         } catch (Exception $e) {
@@ -153,7 +147,7 @@ HTML;
 
 // This call is starting the creation of the page.
 // That is input is processed and output is created.
-dashboard::main();
+editGetJson::main();
 
 // Zend standard does not like closing php-tag!
 // PHP doesn't require the closing tag (it is assumed when the file ends).

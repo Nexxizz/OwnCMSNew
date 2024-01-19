@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 require_once './Page.php';
 
-class edit extends Page
+class editAjax extends Page
 {
     // to do: declare reference variables for members
     // representing substructures/blocks
@@ -46,27 +46,26 @@ class edit extends Page
     {
         // to do: fetch data for this view from the database
         // to do: return array containing data
-        if (isset($_GET['site'])) {
-
-        $siteName = $this->_database->real_escape_string($_GET['site']);
-
-        $sql = "SELECT * FROM content_of_user where name = '$siteName'";
-
-        $recordset = $this->_database->query($sql);
-        if (!$recordset) {
-            throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
-        }
-
-        $result = $recordset->fetch_assoc();
-//        $record = $recordset->fetch_assoc();
-//        while ($record) {
-//            $result[] = $record;
-//            $record = $recordset->fetch_assoc();
+//        if (isset($_GET['site'])) {
+//            $siteName = $this->_database->real_escape_string($_GET['site']);
+//            $sql = "SELECT * FROM examples where name = '$siteName'";
+//
+//            $recordset = $this->_database->query($sql);
+//            if (!$recordset) {
+//                throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+//            }
+//
+//            $result = $recordset->fetch_assoc();
+////        $record = $recordset->fetch_assoc();
+////        while ($record) {
+////            $result[] = $record;
+////            $record = $recordset->fetch_assoc();
+////        }
+//
+//            $recordset->free();
+//            return $result;
 //        }
-
-        $recordset->free();
-        return $result;
-        }
+//
         return array();
     }
 
@@ -80,52 +79,34 @@ class edit extends Page
      */
     protected function generateView(): void
     {
-        $data = $this->getViewData(); //NOSONAR ignore unused $data
-        if($data != array()) {
-        $this->generatePageHeader('Own CMS New', 'js/main.js'); //to do: set optional parameters
-        $titel = htmlspecialchars($data['title']);
-        $navi = htmlspecialchars($data['navi']);
-        $content = htmlspecialchars($data['content']);
-        $footer = htmlspecialchars($data['footer']);
-        $siteName = $data['name'];
-        echo <<< TITEL
-        <a href="dashboard.php">Zurück zu Dashboard</a>
+//        $data = $this->getViewData(); //NOSONAR ignore unused $data
+//        $this->generatePageHeader($data['title'], 'js/main.js'); //to do: set optional parameters
+//        var_dump($data);
+        echo <<< HEAD
+        <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="stylesheet" type="text/css" href="css/style.css">
+        <head><title id='editAjaxTitle'></title></head>
+HEAD;
+        $siteName = $_GET['site'];
 
-        <form action="edit.php?site=$siteName" method="post" accept-charset="utf-8">
-        <h3>Titel</h3>
-        <textarea rows="5" cols="120" name="titel">$titel</textarea>
-        <input type="submit" value="Editieren">
-        </form>
-TITEL;
+//        echo "$site";
+        echo "<body id='editAjaxBody' onload='edit.requestData()' data-info='$siteName'><script src='js/GenerateEditAjax.js'></script>";
+        echo "<a href='dashboard.php'>zurück zu Dashboard</a>";
 
-
-        echo <<< NAVI
-        <form action="edit.php?site=$siteName" method="post" accept-charset="utf-8">
-        <h3>Navigation</h3>
-        <textarea rows="15" cols="120" name="navi">$navi</textarea>
-        <input type="submit" value="Editieren">
-        </form>
-NAVI;
-
-        echo <<< MAIN
-        <form action="edit.php?site=$siteName" method="post" accept-charset="utf-8">
-        <h3>Content</h3>
-        <textarea rows="20" cols="120" name="content">$content</textarea>
-        <input type="submit" value="Editieren">
-        </form>
-MAIN;
-
-        echo <<< FOOTER
-        <form action="edit.php?site=$siteName" method="post" accept-charset="utf-8">
-        <h3>Footer</h3>
-        <textarea rows="20" cols="120" name="footer">$footer</textarea>
-        <input type="submit" value="Editieren">
-        </form>
-FOOTER;
-
-        $this->generatePageFooter();
+//        echo <<< NAVI
+//        <a href="examples.php">Zurück zu Beispielsseiten</a>
+//        $data[navi]
+//NAVI;
+//
+//        echo <<< MAIN
+//        $data[content]
+//MAIN;
+//
+//        $this->generatePageFooter();
     }
-    }
+
     /**
      * Processes the data that comes via GET or POST.
      * If this page is supposed to do something with submitted
@@ -190,7 +171,6 @@ FOOTER;
             }
 
         }
-
         // to do: call processReceivedData() for all members
     }
 
@@ -208,7 +188,7 @@ FOOTER;
     public static function main(): void
     {
         try {
-            $page = new edit();
+            $page = new editAjax();
             $page->processReceivedData();
             $page->generateView();
         } catch (Exception $e) {
@@ -221,7 +201,7 @@ FOOTER;
 
 // This call is starting the creation of the page.
 // That is input is processed and output is created.
-edit::main();
+editAjax::main();
 
 // Zend standard does not like closing php-tag!
 // PHP doesn't require the closing tag (it is assumed when the file ends).
