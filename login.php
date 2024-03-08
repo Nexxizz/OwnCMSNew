@@ -62,7 +62,16 @@ class login extends Page
     {
         $data = $this->getViewData(); //NOSONAR ignore unused $data
         $this->generatePageHeader('Own CMS New', 'js/main.js'); //to do: set optional parameters
-        echo <<< HTML
+
+        if(isset($_SESSION["nutzerId"])){
+            echo <<< LOGOUT
+            <h1>Logout</h1>
+            <a href="logout.php">Ausloggen</a>
+LOGOUT;
+
+        }
+        else {
+            echo <<< HTML
     <h1>Login</h1>
     <form method="post" action="login.php" accept-charset="utf-8">
     <label for="email">eMail</label>
@@ -72,6 +81,7 @@ class login extends Page
     <input type="submit">
     </form>
 HTML;
+        }
         $this->generatePageFooter();
     }
 
@@ -94,7 +104,7 @@ HTML;
                 $user = $result->fetch_assoc();
                 if ($user) {
                     $_SESSION['nutzerId'] = $user['id'];
-                    echo "You have successfully logged in";
+                    echo "Du hast dich erfolgreich eingeloggt";
 //                    header("HTTP/1.1 303 See Other");
 
                     header('Location: dashboard.php');
