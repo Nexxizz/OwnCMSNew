@@ -61,23 +61,26 @@ class register extends Page
      */
     protected function generateView(): void
     {
-        $data = $this->getViewData(); //NOSONAR ignore unused $data
+        session_start();
         $this->generatePageHeader('Own CMS New', 'js/main.js'); //to do: set optional parameters
-        echo <<< HTML
-    <h1>Register</h1>
-    <form method="post" action="register.php" accept-charset="utf-8">
-    <label for="name">Username</label>
-    <input type="text" id="name" placeholder="Max" name="username" required>
-    <label for="email">eMail</label>
-    <input type="email" id="email" placeholder="Max@mail.de" name="email" required>
-    <label for="pw">Password</label>
-    <input type="password" id="pw" placeholder="eg32-g23" name="pw" required>
-    <input type="submit">
-    </form>
-HTML;
-        $this->generatePageFooter();
-    }
 
+        echo "<h1>Register</h1>";
+        if (!(isset($_SESSION['nutzerId']))) {
+            $data = $this->getViewData(); //NOSONAR ignore unused $data
+            echo <<< HTML
+        <form method="post" action="register.php" accept-charset="utf-8">
+        <label for="name">Username</label>
+        <input type="text" id="name" placeholder="Max" name="username" required>
+        <label for="email">eMail</label>
+        <input type="email" id="email" placeholder="Max@mail.de" name="email" required>
+        <label for="pw">Password</label>
+        <input type="password" id="pw" placeholder="eg32-g23" name="pw" required>
+        <input type="submit">
+        </form>
+HTML;
+            $this->generatePageFooter();
+        }
+    }
     /**
      * Processes the data that comes via GET or POST.
      * If this page is supposed to do something with submitted

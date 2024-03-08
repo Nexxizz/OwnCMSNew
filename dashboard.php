@@ -84,15 +84,15 @@ class dashboard extends Page
         <h1>Dashboard</h1>
         <p>Hier können Sie Ihre Webseiten verwalten</p>
 INFO;
-//        var_dump($data);
-
-        foreach($data as $site){
-            echo <<< HTML
+        if(isset($_SESSION['nutzerId'])){
+            foreach($data as $site){
+                echo <<< HTML
         <a href="viewUserContent.php?site=$site[name]">$site[name] Seite ansehen</a>
         <a href="editAjax.php?site=$site[name]"">Seite editieren</a>
         <a href="dashboard.php?id=$site[examplesId]">Seite löschen</a>
         <br>
 HTML;
+            }
         }
 
         $this->generatePageFooter();
@@ -107,7 +107,7 @@ HTML;
     protected function processReceivedData(): void
     {
         parent::processReceivedData();
-        session_start();
+
         if(isset($_GET['id']) && isset($_SESSION['nutzerId'])) {
             $examplesId =  intval($this->_database->real_escape_string($_GET['id']));
             $userId = intval($_SESSION['nutzerId']);
@@ -140,6 +140,7 @@ HTML;
     public static function main(): void
     {
         try {
+            session_start();
             $page = new dashboard();
             $page->processReceivedData();
             $page->generateView();
