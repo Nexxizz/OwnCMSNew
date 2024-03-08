@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 
 require_once './Page.php';
+include 'parts/nav.php';
 
 class login extends Page
 {
