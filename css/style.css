@@ -1,6 +1,81 @@
 #CMSNav {
-    background-color: antiquewhite;
-    color: darkgreen;
-    font-size: 3.5em;
+    background-color: #30373D;
+    opacity: 0.8;
+    font-size: 2.5em;
     min-height: 10rem;
+    display: flex;
+    justify-content: space-around;
+    border-radius: 1rem;
+}
+
+
+.navLink{
+    margin-top: 2.4rem;
+    color: darkgreen;
+    text-decoration: none;
+    opacity: 1.0;
+}
+
+.navLink:visited {
+    color: lightseagreen;
+    opacity: 1.0;
+}
+
+.bodyMain {
+    background-image: url('../exampleIMG/backgroundMain.jpeg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+
+}
+
+body {
+    color: lightseagreen;
+}
+
+p {
+    font-size: 1.5em;
+}
+
+h1 {
+    font-size: 2.5em;
+}
+
+h2 {
+    font-size: 2.0em;
+}
+
+h3 {
+    font-size: 1.67em;
+}
+
+h4 {
+    font-size: 1.5em;
+}
+
+h5 {
+    font-size: 1.23em;
+}
+
+h6 {
+    font-size: 1.17em;
+}
+
+input {
+    font-size: 1.3em;
+    color: lightseagreen;
+    border-radius: 1rem;
+}
+
+label {
+    font-size: 1.5em;
+}
+
+a {
+    color: darkgreen;
+    font-size: 1.5em;
+}
+
+a:visited {
+    color: lightseagreen;
 }

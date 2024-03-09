@@ -63,7 +63,7 @@ class register extends Page
     {
         session_start();
         $this->generatePageHeader('Own CMS New', 'js/main.js'); //to do: set optional parameters
-
+        echo "<body class='bodyMain'>";
         echo "<h1>Register</h1>";
         if (!(isset($_SESSION['nutzerId']))) {
             $data = $this->getViewData(); //NOSONAR ignore unused $data
@@ -75,9 +75,10 @@ class register extends Page
         <input type="email" id="email" placeholder="Max@mail.de" name="email" required>
         <label for="pw">Password</label>
         <input type="password" id="pw" placeholder="eg32-g23" name="pw" required>
-        <input type="submit">
+        <input type="submit" value="Abschicken">
         </form>
 HTML;
+            echo "</body>";
             $this->generatePageFooter();
         }
     }

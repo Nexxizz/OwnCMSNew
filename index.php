@@ -63,10 +63,12 @@ class index extends Page
     {
         $data = $this->getViewData(); //NOSONAR ignore unused $data
         $this->generatePageHeader('Own CMS New', 'js/main.js'); //to do: set optional parameters
+        echo "<body class='bodyMain'>";
         echo <<< HTML
     <h1>Willkommen</h1>
     <p>Dies ist eine Content Management System (CMS) Webseite</p>
 HTML;
+        echo "</body>";
         $this->generatePageFooter();
     }
 

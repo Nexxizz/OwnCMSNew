@@ -62,7 +62,7 @@ class login extends Page
     {
         $data = $this->getViewData(); //NOSONAR ignore unused $data
         $this->generatePageHeader('Own CMS New', 'js/main.js'); //to do: set optional parameters
-
+        echo "<body class='bodyMain'>";
         if(isset($_SESSION["nutzerId"])){
             echo <<< LOGOUT
             <h1>Logout</h1>
@@ -78,10 +78,11 @@ LOGOUT;
     <input type="email" id="email" placeholder="Max@mail.de" name="email" required>
     <label for="pw">Password</label>
     <input type="password" id="pw" placeholder="eg32-g23" name="pw" required>
-    <input type="submit">
+    <input type="submit" value="Abschicken">
     </form>
 HTML;
         }
+        echo "</body>";
         $this->generatePageFooter();
     }
 

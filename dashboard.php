@@ -79,7 +79,7 @@ class dashboard extends Page
     {
         $data = $this->getViewData(); //NOSONAR ignore unused $data
         $this->generatePageHeader('Own CMS New', 'js/main.js'); //to do: set optional parameters
-
+        echo "<body class='bodyMain'>";
         echo <<< INFO
         <h1>Dashboard</h1>
         <p>Hier können Sie Ihre Webseiten verwalten</p>
@@ -94,7 +94,7 @@ INFO;
 HTML;
             }
         }
-
+        echo "</body>";
         $this->generatePageFooter();
     }
 
