@@ -98,8 +98,8 @@ HTML;
         parent::processReceivedData();
         if (isset($_POST['email']) && isset($_POST['pw'])) {
             if ($stm = $this->_database->prepare('SELECT * FROM users WHERE email = ? AND password = ?')) {
-//        $hashed = SHA1($_POST['password']);
-                $stm->bind_param('ss',  $_POST['email'], $_POST['pw']);
+                $hashed = SHA1($_POST['pw']);
+                $stm->bind_param('ss',  $_POST['email'], $hashed);
                 $stm->execute();
                 $result = $stm->get_result();
                 $user = $result->fetch_assoc();

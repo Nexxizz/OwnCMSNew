@@ -101,13 +101,14 @@ HTML;
             }
 
             $getValues = $stm2Query->fetch_assoc();
-
+//
             var_dump($getValues);
 
             if($getValues['username'] != $_POST['username'] && $getValues['email'] != $_POST['email']) {
+                $hashed = SHA1($_POST['pw']);
                 if ($stm = $this->_database->prepare('INSERT INTO users (username, email, password) VALUES (?, ?, ?)')){
                     //        $hashed = SHA1($_POST['password']);
-                    $stm->bind_param('sss', $_POST['username'], $_POST['email'], $_POST['pw']);
+                    $stm->bind_param('sss', $_POST['username'], $_POST['email'], $hashed);
                     $stm->execute();
                     header('Location: login.php');
                     $stm->close();
