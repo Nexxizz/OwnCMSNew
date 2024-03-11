@@ -51,7 +51,7 @@ class editGetJson extends Page
             $siteName = $this->_database->real_escape_string($_GET['site']);
             $nutzerID = $_SESSION["nutzerId"];
 
-            $sql = "SELECT * FROM content_of_user WHERE name = '$siteName'AND nutzerId = '$nutzerID'";
+            $sql = "SELECT * FROM content_of_user WHERE name = '$siteName' AND nutzerId = '$nutzerID'";
 
             $recordset = $this->_database->query($sql);
             if (!$recordset) {

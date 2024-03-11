@@ -46,10 +46,12 @@ class view extends Page
     {
         // to do: fetch data for this view from the database
         // to do: return array containing data
-
+        session_start();
+        if(isset($_GET['site']) && isset($_SESSION["nutzerId"])) {
             $siteName = $this->_database->real_escape_string($_GET['site']);
+            $nutzerID = $_SESSION["nutzerId"];
 
-            $sql = "SELECT * FROM examples WHERE name = '$siteName'";
+            $sql = "SELECT * FROM examples WHERE name = '$siteName' AND nutzerId = '$nutzerID'";
 
             $recordset = $this->_database->query($sql);
             if (!$recordset) {
@@ -66,8 +68,8 @@ class view extends Page
             $recordset->free();
             return $result;
 //        }
-
-//        return array();
+        }
+           return array();
     }
 
     /**

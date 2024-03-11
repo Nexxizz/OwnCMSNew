@@ -49,22 +49,26 @@ class dashboard extends Page
         // to do: return array containing data
         // to do: fetch data for this view from the database
         // to do: return array containing data
-        $sql = "SELECT * FROM content_of_user";
+        if(isset($_SESSION["nutzerId"])){
+            $nutzerID = $_SESSION["nutzerId"];
+            $sql = "SELECT * FROM content_of_user WHERE nutzerId = '$nutzerID'";
 
-        $recordset = $this->_database->query($sql);
-        if (!$recordset) {
-            throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
-        }
+            $recordset = $this->_database->query($sql);
+            if (!$recordset) {
+                throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+            }
 
-        $result = array();
-        $record = $recordset->fetch_assoc();
-        while ($record) {
-            $result[] = $record;
+            $result = array();
             $record = $recordset->fetch_assoc();
-        }
+            while ($record) {
+                $result[] = $record;
+                $record = $recordset->fetch_assoc();
+            }
 
-        $recordset->free();
-        return $result;
+            $recordset->free();
+            return $result;
+        }
+        return array();
     }
 
     /**

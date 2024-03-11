@@ -46,9 +46,12 @@ class viewUserContent extends Page
     {
         // to do: fetch data for this view from the database
         // to do: return array containing data
-        if (isset($_GET['site'])) {
+        session_start();
+        if (isset($_GET['site']) && isset($_SESSION["nutzerId"])) {
             $siteName = $this->_database->real_escape_string($_GET['site']);
-            $sql = "SELECT * FROM content_of_user where name = '$siteName'";
+            $nutzerID = $_SESSION["nutzerId"];
+
+            $sql = "SELECT * FROM content_of_user where name = '$siteName' AND nutzerId = '$nutzerID'";
 
             $recordset = $this->_database->query($sql);
             if (!$recordset) {

@@ -81,6 +81,9 @@ HTML;
             echo "</body>";
             $this->generatePageFooter();
         }
+        else {
+            echo "<p>Bereits eingeloggt</p>";
+        }
     }
     /**
      * Processes the data that comes via GET or POST.
