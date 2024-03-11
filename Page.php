@@ -81,7 +81,7 @@ abstract class Page
             <title>$title</title>
 HEADERHTML;
         if($jsFile != ""){
-           echo "<script src='js/main.js'></script>";
+           echo "<script src=$jsFile></script>";
         }
             if($autoreload === true){
                 echo "<meta http-equiv=\"refresh\" content=\"10\" />";

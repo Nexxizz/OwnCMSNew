@@ -46,28 +46,24 @@ class editGetJson extends Page
     {
         // to do: fetch data for this view from the database
         // to do: return array containing data
+        session_start();
+        if(isset($_GET['site']) && isset($_SESSION["nutzerId"])) {
+            $siteName = $this->_database->real_escape_string($_GET['site']);
+            $nutzerID = $_SESSION["nutzerId"];
 
-        $siteName = $this->_database->real_escape_string($_GET['site']);
+            $sql = "SELECT * FROM content_of_user WHERE name = '$siteName'AND nutzerId = '$nutzerID'";
 
-        $sql = "SELECT * FROM content_of_user WHERE name = '$siteName'";
+            $recordset = $this->_database->query($sql);
+            if (!$recordset) {
+                throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+            }
 
-        $recordset = $this->_database->query($sql);
-        if (!$recordset) {
-            throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+            $result = $recordset->fetch_assoc();
+
+            $recordset->free();
+            return $result;
         }
-
-        $result = $recordset->fetch_assoc();
-//        $record = $recordset->fetch_assoc();
-//        while ($record) {
-//            $result[] = $record;
-//            $record = $recordset->fetch_assoc();
-//        }
-
-        $recordset->free();
-        return $result;
-//        }
-
-//        return array();
+        return array();
     }
 
     /**

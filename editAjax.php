@@ -115,62 +115,67 @@ HEAD;
      */
     protected function processReceivedData(): void
     {
+        session_start();
         parent::processReceivedData();
-        if (isset($_GET['site'])) {
-            $siteName = $this->_database->real_escape_string($_GET['site']);
-            if (isset($_POST['titel'])) {
-                $saveTitel = $this->_database->real_escape_string($_POST['titel']);
-                $sqlUpdateOrdArt = "UPDATE content_of_user SET title = '$saveTitel' WHERE name = '$siteName'";
+        if(isset($_SESSION["nutzerId"])){
+            $nutzerID = $_SESSION["nutzerId"];
+            if (isset($_GET['site'])) {
+                $siteName = $this->_database->real_escape_string($_GET['site']);
+                if (isset($_POST['titel'])) {
+                    $saveTitel = $this->_database->real_escape_string($_POST['titel']);
+                    $sqlUpdateOrdArt = "UPDATE content_of_user SET title = '$saveTitel' WHERE name = '$siteName' AND nutzerId = '$nutzerID'";
 
-                $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
+                    $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
 
-                if (!$sqlUpdateCheck) {
-                    throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
-                }
-                echo "Titel editiert";
+                    if (!$sqlUpdateCheck) {
+                        throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+                    }
+                    echo "Titel editiert";
 //                header('Location: edit.php?site='.$siteName);
-            }
-
-            if (isset($_POST['navi'])) {
-                $saveNavi = $this->_database->real_escape_string($_POST['navi']);
-                $sqlUpdateOrdArt = "UPDATE content_of_user SET navi = '$saveNavi' WHERE name = '$siteName'";
-
-                $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
-
-                if (!$sqlUpdateCheck) {
-                    throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
                 }
-                echo "Navi editiert";
+
+                if (isset($_POST['navi'])) {
+                    $saveNavi = $this->_database->real_escape_string($_POST['navi']);
+                    $sqlUpdateOrdArt = "UPDATE content_of_user SET navi = '$saveNavi' WHERE name = '$siteName' AND nutzerId = '$nutzerID'";
+
+                    $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
+
+                    if (!$sqlUpdateCheck) {
+                        throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+                    }
+                    echo "Navi editiert";
 //                header('Location: edit.php?site='.$siteName);
-            }
-
-            if (isset($_POST['content'])) {
-                $saveContent = $this->_database->real_escape_string($_POST['content']);
-                $sqlUpdateOrdArt = "UPDATE content_of_user SET content = '$saveContent' WHERE name = '$siteName'";
-
-                $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
-
-                if (!$sqlUpdateCheck) {
-                    throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
                 }
-                echo "Content editiert";
+
+                if (isset($_POST['content'])) {
+                    $saveContent = $this->_database->real_escape_string($_POST['content']);
+                    $sqlUpdateOrdArt = "UPDATE content_of_user SET content = '$saveContent' WHERE name = '$siteName' AND nutzerId = '$nutzerID'";
+
+                    $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
+
+                    if (!$sqlUpdateCheck) {
+                        throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+                    }
+                    echo "Content editiert";
 //                header('Location: edit.php?site='.$siteName);
-            }
-
-            if (isset($_POST['footer'])) {
-                $saveFooter = $this->_database->real_escape_string($_POST['footer']);
-                $sqlUpdateOrdArt = "UPDATE content_of_user SET footer = '$saveFooter' WHERE name = '$siteName'";
-
-                $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
-
-                if (!$sqlUpdateCheck) {
-                    throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
                 }
-                echo "Content editiert";
-//                header('Location: edit.php?site='.$siteName);
-            }
 
+                if (isset($_POST['footer'])) {
+                    $saveFooter = $this->_database->real_escape_string($_POST['footer']);
+                    $sqlUpdateOrdArt = "UPDATE content_of_user SET footer = '$saveFooter' WHERE name = '$siteName' AND nutzerId = '$nutzerID'";
+
+                    $sqlUpdateCheck = $this->_database->query($sqlUpdateOrdArt);
+
+                    if (!$sqlUpdateCheck) {
+                        throw new Exception("Abfrage fehlgeschlagen: " . $this->_database->error);
+                    }
+                    echo "Content editiert";
+//                header('Location: edit.php?site='.$siteName);
+                }
+
+            }
         }
+
         // to do: call processReceivedData() for all members
     }
 
