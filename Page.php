@@ -30,7 +30,7 @@ abstract class Page
         }
         /********************************************/
 
-        $this->_database = new MySQLi($host, "CMSNew", "1234ab", "CMSNew");
+        $this->_database = new MySQLi($host, "root", "", "CMSNew");
 
         if (mysqli_connect_errno()) {
             throw new Exception("Connect failed: " . mysqli_connect_error());
